@@ -40,23 +40,6 @@ function Orders() {
 
           {/* ordered items */}
           <div>
-            {/* {orders?.map((eachOrder, i) => {
-              //map the array, i=index
-
-              return (
-                <div>
-                  <hr />
-                  <p>Order ID: {eachOrder?.id}</p>
-                  {eachOrder?.data?.basket?.map(
-                    (
-                      order //we can also use return here
-                    ) => (
-                      <ProductCard flex={true} Product={order} key={order.id} />
-                    )
-                  )}
-                </div>
-              );
-            })} */}
             {orders?.map((eachOrder, i) => {
               return (
                 <div key={i}>

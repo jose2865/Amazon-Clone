@@ -7,7 +7,6 @@ import { DataContext } from "./Components/DataProvider/DataProvider.jsx";
 
 function App() {
   const [{ user }, dispatch] = useContext(DataContext);
-
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {

@@ -39,27 +39,24 @@ function Payment() {
     e.preventDefault();
 
     try {
+      setProcessing(true);
       //step 1
       //backend || functions--->contact to the client secret.
+              setProcessing(true);
       const response = await axiosInstance({
         method: "POST",
-        url: `/payment/create?total=${total * 100}`, //The total price in the basket.
+        url: `/payment/create?total=${total * 100}`,
       });
-      // console.log(response.data);
+      console.log(response.data);
       const clientSecret = response.data?.clientSecret;
-      //2. client side (react side confirmation) confitm is the payment is successful.
-
-      const { paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-
-        {
-          payment_method: {
-            card: elements.getElement(CardElement), //receives the card number
-          },
-        }
-      );
-
-      // console.log(paymentIntent);
+      // 2. client side(react based) confirmation
+      const confirmation = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+      const { paymentIntent } = confirmation;
+      console.log(paymentIntent);
 
       //3. after the confirmation --> order firestore database save, clear basket (put it in the database)
       await db
