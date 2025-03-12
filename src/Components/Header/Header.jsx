@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./Header.module.css";
+import { Link } from "react-router-dom";
 import { SlLocationPin } from "react-icons/sl";
 import { BsSearch } from "react-icons/bs";
 import { BiCart } from "react-icons/bi";
 import { AiOutlineMenu } from "react-icons/ai";
 import LowerHeader from "./LowerHeader";
+import { DataContext } from "../../Components/DataProvider/DataProvider";
+import { auth } from "../../Utility/firebase";
 
 const Header = () => {
+  const [{ basket, user }, dispatch] = useContext(DataContext); //our state is basket and dispatch is function to update state.
+  console.log(basket.length);
+  const totalItem = basket?.reduce((amount, item) => {
+    return item.amount + amount;
+  }, 0);
+
   return (
-    <>
+    <section className={classes.fixed}>
       <section>
         <div className={classes.header__container}>
           {/* logo section */}
           <div className={classes.logo__container}>
-            <a href="">
+            <Link to="/">
               <img
                 src="https://pngimg.com/uploads/amazon/amazon_PNG11.png"
                 alt="amazon logo"
               />
-            </a>
+            </Link>
             {/* {delivery} */}
             <span>
               <SlLocationPin />
@@ -29,11 +38,11 @@ const Header = () => {
             </div>
           </div>
           <div className={classes.search}>
-            <BsSearch size={25} />
             <select name="" id="">
               <option value="">All</option>
             </select>
             <input type="text" name="" id="" placeholder="search product" />
+            <BsSearch size={38} />
             {/* icon */}
           </div>
 
@@ -42,7 +51,7 @@ const Header = () => {
           {/* right side link */}
 
           <div className={classes.order__container}>
-            <a href="" className={classes.language}>
+            <Link to="" className={classes.language}>
               <img
                 src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1024px-Flag_of_the_United_States.svg.png"
                 alt="Flag of the United States"
@@ -50,29 +59,38 @@ const Header = () => {
               <select>
                 <option value="">EN</option>
               </select>
-            </a>
+            </Link>
             {/*three components*/}
-            <a href="">
+            <Link to={!user && "/auth"}>
               <div>
-                <p>Sign In</p>
-                <span>Account & Lists</span>
+                {user ? (
+                  <>
+                    <p>Hello {user?.email?.split("@")[0]}</p>
+                    <span onClick={() => auth.signOut()}>Sign Out</span>
+                  </>
+                ) : (
+                  <>
+                    <p> Hello, Sign In</p>
+                    <span>Account & Lists</span>
+                  </>
+                )}
               </div>
-            </a>
+            </Link>
             {/* {Orders} */}
-            <a href="">
+            <Link to="/Orders">
               <p>Returns</p>
               <span>& Orders</span>
-            </a>
-            <a to="/cart" className={classes.cart}>
+            </Link>
+            <Link to="/cart" className={classes.cart}>
               <BiCart size={35} />
 
-              <span>0</span>
-            </a>
+              <span>{totalItem}</span>
+            </Link>
           </div>
         </div>
       </section>
       <LowerHeader />
-    </>
+    </section>
   );
 };
 
