@@ -1,14 +1,14 @@
-import React, { useState, useContext } from "react";
-import Classes from "./Signup.module.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { auth } from "../../Utility/firebase";
+import React, {useState, useContext} from "react";
+import Classes from "./SignUp.module.css";
+import {Link, useNavigate, useLocation} from "react-router-dom";
+import {auth} from "../../Utility/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { PuffLoader } from "react-spinners";
-import { DataContext } from "../../Components/DataProvider/DataProvider";
-import { Type } from "../../Utility/Action.type";
+import {PuffLoader} from "react-spinners";
+import {DataContext} from "../../Components/DataProvider/DataProvider";
+import {Type} from "../../Utility/Action.type";
 
 function Auth() {
   const [email, setEmail] = useState(""); // hold on the state and sign up
@@ -18,19 +18,19 @@ function Auth() {
     signIn: false, //two properties sign in and sign up to be able to log in to Amazon account, we start as false.
     signUp: false,
   });
-  const [{ user }, dispatch] = useContext(DataContext);
+  const [{user}, dispatch] = useContext(DataContext);
   const navigate = useNavigate();
   const navStateData = useLocation();
   console.log(navStateData);
 
   // console.log(user);
-
+  //authhandler is called when the form is submitted,  It handles both authentication processes
   const authHandler = async (e) => {
     e.preventDefault();
     // console.log(e.target.name);
     if (e.target.name == "signin") {
       //firebase auth
-      setLoading({ ...loading, signIn: true }); //loading true here to sign in.
+      setLoading({...loading, signIn: true}); //loading true here to sign in.
       signInWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
           //this gives us promise, user await or continue with then.
@@ -40,16 +40,16 @@ function Auth() {
             user: userInfo.user,
           });
 
-          setLoading({ ...loading, signIn: false }); // after signing in we need to make it false, don't need to spin.
+          setLoading({...loading, signIn: false}); // after signing in we need to make it false, don't need to spin.
           navigate(navStateData?.state?.redirect || "/");
-        })
+        }) // navigates to the page stored in here
         .catch((error) => {
           // console.log(error.message);
 
           setError(error.message);
         });
     } else {
-      setLoading({ ...loading, signUp: true });
+      setLoading({...loading, signUp: true});
       createUserWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
           // console.log(userInfo);
@@ -58,14 +58,14 @@ function Auth() {
             type: Type.SET_USER,
             user: userInfo.user,
           });
-          setLoading({ ...loading, signUp: false });
+          setLoading({...loading, signUp: false});
           // navigate("/"); //after sign it navigates me to the home page.
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
           // console.log(error);
           setError(error.message);
-          setLoading({ ...loading, signUp: false }); //after signing up we need to make it false.
+          setLoading({...loading, signUp: false}); //after signing up we need to make it false.
         });
     }
   };
@@ -153,7 +153,7 @@ function Auth() {
         </button>
 
         {error && (
-          <small style={{ paddingTop: "5px", color: "red" }}>{error}</small>
+          <small style={{paddingTop: "5px", color: "red"}}>{error}</small>
         )}
       </div>
     </section>

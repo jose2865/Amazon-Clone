@@ -60,11 +60,11 @@ function Payment() {
 
       //3. after the confirmation --> order firestore database save, clear basket (put it in the database)
       await db
-        .collection("users")
-        .doc(user.uid)
-        .collection("orders")
-        .doc(paymentIntent.id)
-        .set({
+        .collection("users") //create users collection
+        .doc(user.uid) //create document
+        .collection("orders") //using user id to create orders collection
+        .doc(paymentIntent.id) //create document using pymt id.
+        .set({ //set the basket 
           basket: basket,
           amount: paymentIntent.amount,
           created: paymentIntent.created,

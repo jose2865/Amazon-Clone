@@ -6,19 +6,20 @@ import { DataContext } from "../../Components/DataProvider/DataProvider";
 import ProductCard from "../../Components/Product/ProductCard";
 
 function Orders() {
-  const [{ user }, dispatch] = useContext(DataContext);
-  const [orders, setOrders] = useState([]); //initial value
+  const [{ user }, dispatch] = useContext(DataContext); //allows to access the value of the DataContext, see reducer
+  const [orders, setOrders] = useState([]); //initial value,empty arrey as default value, orders retrieved from the database.
 
   useEffect(() => {
     if (user) {
       //call db
-      db.collection("users")
-        .doc(user.uid)
+      db.collection("users") //Access the users collection in Firestore.
+        .doc(user.uid) // user identified by user.uid.
         .collection("orders")
         .orderBy("created", "desc")
         .onSnapshot((snapshot) => {
           console.log(snapshot);
           setOrders(
+            //updates the state with the new list of orders
             snapshot?.docs?.map((doc) => ({
               id: doc.id,
               data: doc.data(),
@@ -26,7 +27,7 @@ function Orders() {
           );
         });
     } else {
-      setOrders([]);
+      setOrders([]); //if user is not logged in, set orders to an empty array.
     }
   }, []);
   return (

@@ -17,4 +17,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 export const auth = getAuth(app); //to use it for others we export it.
-export const db = app.firestore();
+export const db = app.firestore(); //export this to orders.jsx
